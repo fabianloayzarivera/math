@@ -1,0 +1,5 @@
+﻿  main.cpp
+c:\users\fabian.loayza\documents\math\handout\handout\p2 transformations\main.cpp(211): warning C4838: conversion from 'double' to 'GLfloat' requires a narrowing conversion
+c:\users\fabian.loayza\documents\math\handout\handout\p2 transformations\math3d.h(270): warning C4700: uninitialized local variable 'q' used
+  Transformations.vcxproj -> C:\Users\fabian.loayza\Documents\math\handout\handout\P2 transformations\Debug\Transformations.exe
+  Transformations.vcxproj -> C:\Users\fabian.loayza\Documents\math\handout\handout\P2 transformations\Debug\Transformations.pdb (Partial PDB)

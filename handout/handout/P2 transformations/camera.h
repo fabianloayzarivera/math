@@ -29,6 +29,13 @@ typedef struct {
     double far;
 } FRUSTUM;
 
+typedef struct {
+	float yaw; // Rotation around the Y axis.
+	float pitch; // Rotation around the X axis.
+	float roll; // Rotation around the Z axis.
+	QUATERNION orientation; // Cached quaternion equivalent of this euler object.	
+} EULER;
+
  // devuelve los valores de distancia de los planos a partir del fov horizontal
 FRUSTUM makeFrustum(double fovX, double aspectRatio, double near, double far)
 {

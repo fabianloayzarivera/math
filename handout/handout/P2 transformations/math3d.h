@@ -40,6 +40,11 @@ typedef struct {
     float m[16];
 } MATRIX4;
 
+typedef struct {
+	float  w;
+	VECTOR3D v;
+}QUATERNION;
+
 static const COLOUR grey = {0.7,0.7,0.7};
 static const COLOUR red = {1,0,0};
 static const COLOUR green = {0,1,0};
@@ -176,6 +181,119 @@ MATRIX4 InverseOrthogonalMatrix(MATRIX3 A, VECTOR3D t) {
 	mat.m[15] = 1;
 
 	return mat;
+}
+
+//QUATERNIONS
+QUATERNION ScaleQuat(QUATERNION q, float s) {
+	QUATERNION qS;
+	qS.w = q.w*s;
+	qS.v.x = q.v.x*s;
+	qS.v.y = q.v.y*s;
+	qS.v.z = q.v.z*s;
+	
+	return qS;
+
+}
+
+QUATERNION NormalizeQuat(QUATERNION q) {
+	QUATERNION norm;
+
+	norm.w	 = q.w*q.w;
+	norm.v.x = q.v.x*q.v.x;
+	norm.v.y = q.v.y*q.v.y;
+	norm.v.z = q.v.z*q.v.z;
+
+	return norm;
+}
+
+QUATERNION QuaternionFromAngleAxis(float angle, VECTOR3D axis) {
+	axis = Normalize(axis);
+	QUATERNION q;
+
+	q.v.x = sin(angle / 2) * axis.x;
+
+	q.v.y = sin(angle / 2) * axis.y;
+
+	q.v.z = sin(angle / 2) * axis.z;
+
+	q.w = cos(angle / 2);
+
+	return q;
+}
+
+QUATERNION QuaternionFromToVectors(VECTOR3D from, VECTOR3D to) {
+
+	float cos_angle = DotProduct(Normalize(from), Normalize(to));
+	VECTOR3D v;
+
+	if (cos_angle < -1 + 0.001f) {
+		VECTOR3D aux;
+		aux.x = 0.0f;
+		aux.y = 0.0f;
+		aux.z = 1.0f;
+		v = CrossProduct(aux, from);
+		if (Magnitude(v) < 0.01) {
+			aux.x = 1.0f;
+			aux.y = 0.0f;
+			aux.z = 0.0f;
+
+			v = CrossProduct(aux, from);
+		}		
+
+		v = Normalize(v);
+		return  QuaternionFromAngleAxis(3.141516, v);
+	}
+	v = Normalize(CrossProduct(from, to));
+	float angle = acos(cos_angle);
+	
+	return QuaternionFromAngleAxis(angle, v);
+}
+
+QUATERNION Multiply(QUATERNION a, QUATERNION b) {
+	QUATERNION quat;
+	/*quat.w = a.w*b.w - a.v.x*b.v.x - a.v.y*b.v.y - a.v.z*b.v.z;
+	quat.v.x = a.w*b.v.x + a.v.x*b.w + a.v.y*b.v.z - a.v.z*b.v.y;
+	quat.v.y = a.w*b.v.y + a.v.y*b.w + a.v.z*b.v.x - a.v.x*b.v.z;
+	quat.v.z = a.w*b.v.z + a.v.z*b.w + a.v.x*b.v.y - a.v.y*b.v.x;
+	return quat;*/
+	
+	float s = (a.w * b.w) - (DotProduct(a.v, b.v));
+	VECTOR3D vec = Add(Add(CrossProduct(a.v, b.v), MultiplyWithScalar(a.w, b.v)), MultiplyWithScalar(b.w, a.v));
+	quat.w = s;
+	quat.v = vec;
+
+	return quat;
+}
+
+QUATERNION Conjugate(QUATERNION a) {
+	QUATERNION q;
+	q.w = q.w;
+	q.v.x = -q.v.x;
+	q.v.y = -q.v.y;
+	q.v.z = -q.v.z;
+	return q;
+}
+
+VECTOR3D RotateWithQuaternion(VECTOR3D v, QUATERNION q) {
+
+	QUATERNION p;
+	QUATERNION pq;
+	QUATERNION pqInv;
+	VECTOR3D rot;
+
+	p.w = 0;
+	p.v.x = v.x;
+	p.v.y = v.y;
+	p.v.z = v.z;
+
+	pq = Multiply(p, q);
+	pqInv = Multiply(pq, Conjugate(q));
+		
+	rot.x = pqInv.v.x;
+	rot.y = pqInv.v.y;
+	rot.z = pqInv.v.z;
+	
+	return rot;
 }
 
 

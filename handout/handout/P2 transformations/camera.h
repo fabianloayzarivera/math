@@ -109,8 +109,8 @@ void updateEulerOrientation(EULER& euler) {
 	vZ.y = 0;
 	vZ.z = 1;
 
-	QUATERNION qX = QuaternionFromAngleAxis(euler.pitch, vX);
-	QUATERNION qY = QuaternionFromAngleAxis(euler.yaw, vY);
+	QUATERNION qX = QuaternionFromAngleAxis(euler.yaw, vX);
+	QUATERNION qY = QuaternionFromAngleAxis(euler.pitch, vY);
 	QUATERNION qZ = QuaternionFromAngleAxis(euler.roll, vZ);
 
 	euler.orientation = Multiply(Multiply(qX, qY), qZ);

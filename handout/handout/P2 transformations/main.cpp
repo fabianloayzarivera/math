@@ -91,7 +91,11 @@ void Display(void)
     glDrawBuffer(GL_BACK_LEFT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    
+	EULER euler;
+	euler.pitch = 0;
+	euler.yaw = 0;
+	euler.roll = 0;
+
     glDrawBuffer(GL_BACK);
     
     double near=0.1,far=10000;
@@ -111,6 +115,9 @@ void Display(void)
     
     // TODO
 	MATRIX4 lookAtMatrix = lookAt(camera.position, target, camera.up);
+
+	//target = Add(camera.position, getForward(euler));
+	//MATRIX4 lookAtMatrix = lookAt(camera.position, target, camera.up);
 	glLoadMatrixf(lookAtMatrix.m);
 
     glViewport(0,0,camera.screenwidth,camera.screenheight);
@@ -273,6 +280,17 @@ void HandleReshape(int w,int h)
     camera.screenheight = h;
 }
 
+//{
+//	if (ratonX == -1 && ratonY == -1) {
+//		rantonX = x;
+//		ratonY = y;
+//	}
+//
+//	deltaX = ratonX - x;
+//	deltaY - ratonY - y;
+//
+//	euler.pitch -=delta
+//}
 void HandleMousePassiveMotion(int x, int y) {
 	EULER e;
 	float fac = 0.1f;

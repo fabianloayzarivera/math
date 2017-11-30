@@ -93,5 +93,38 @@ MATRIX4 lookAt(VECTOR3D eyePosition, VECTOR3D target, VECTOR3D upVector) {
 
 }
 
+void updateEulerOrientation(EULER& euler) {
+	VECTOR3D vX;
+	vX.x = 1;
+	vX.y = 0;
+	vX.z = 0;
+
+	VECTOR3D vY;
+	vY.x = 0;
+	vY.y = 1;
+	vY.z = 0;
+
+	VECTOR3D vZ;
+	vZ.x = 0;
+	vZ.y = 0;
+	vZ.z = 1;
+
+	QUATERNION qX = QuaternionFromAngleAxis(euler.pitch, vX);
+	QUATERNION qY = QuaternionFromAngleAxis(euler.yaw, vY);
+	QUATERNION qZ = QuaternionFromAngleAxis(euler.roll, vZ);
+
+	euler.orientation = Multiply(Multiply(qX, qY), qZ);
+
+}
+
+VECTOR3D getForward(EULER euler) {
+	VECTOR3D vector;
+	vector.x = 0;
+	vector.y = 0;
+	vector.z = -1;
+
+	updateEulerOrientation(euler);
+	return RotateWithQuaternion(vector, euler.orientation);
+}
 
 #endif

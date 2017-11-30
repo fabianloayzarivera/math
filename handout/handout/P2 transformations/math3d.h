@@ -267,10 +267,10 @@ QUATERNION Multiply(QUATERNION a, QUATERNION b) {
 
 QUATERNION Conjugate(QUATERNION a) {
 	QUATERNION q;
-	q.w = q.w;
-	q.v.x = -q.v.x;
-	q.v.y = -q.v.y;
-	q.v.z = -q.v.z;
+	q.w = a.w;
+	q.v.x = -a.v.x;
+	q.v.y = -a.v.y;
+	q.v.z = -a.v.z;
 	return q;
 }
 

@@ -22,6 +22,7 @@ void Render(void);
 void Lighting(void);
 void InitCamera(int);
 void HandleKeyboard(unsigned char key,int x, int y);
+void HandleMousePassiveMotion(int x, int y);
 void HandleReshape(int,int);
 void HandleIdle(void);
 
@@ -55,6 +56,8 @@ int main(int argc,char **argv)
     glutReshapeWindow(camera.screenwidth,camera.screenheight);
     glutIdleFunc(HandleIdle);
     glutKeyboardFunc(HandleKeyboard);
+	//glutMotionFunc(HandleMouseMotion);
+	glutPassiveMotionFunc(HandleMousePassiveMotion);
     Init();
     InitCamera(0);
     Lighting();
@@ -270,6 +273,21 @@ void HandleReshape(int w,int h)
     camera.screenheight = h;
 }
 
+void HandleMousePassiveMotion(int x, int y) {
+	EULER e;
+	float fac = 0.1f;
+	int rotX = x - (camera.screenwidth / 2);
+	int rotY = y - (camera.screenheight / 2);
+	float xAngle = DTOR * 90 / camera.screenwidth * rotX * fac;
+	float yAngle = DTOR * 90 / camera.screenheight * rotY * fac;
+
+	e.pitch = yAngle;
+	e.yaw = xAngle;
+	e.roll = 0;
+
+	updateEulerOrientation(e);
+	camera.direction = getForward(e);
+}
 
 void InitCamera(int mode)
 {

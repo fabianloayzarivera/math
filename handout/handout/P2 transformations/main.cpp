@@ -56,7 +56,7 @@ int main(int argc,char **argv)
     glutReshapeWindow(camera.screenwidth,camera.screenheight);
     glutIdleFunc(HandleIdle);
     glutKeyboardFunc(HandleKeyboard);
-	//glutMotionFunc(HandleMouseMotion);
+	glutMotionFunc(HandleMousePassiveMotion);
 	glutPassiveMotionFunc(HandleMousePassiveMotion);
     Init();
     InitCamera(0);
